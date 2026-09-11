@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Ranu ❤️</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100vh; overflow:hidden;
+  font-family:Georgia,"Times New Roman",serif;
+  background:radial-gradient(circle at center,#3a1027 0%,#170916 48%,#08030a 100%);
+  color:#fff; display:flex; align-items:center; justify-content:center;
+}
+#stars{position:fixed;inset:0;pointer-events:none}
+.card{
+  width:min(900px,92vw); min-height:560px; padding:48px 34px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; position:relative; z-index:2;
+  background:rgba(255,255,255,.055); border:1px solid rgba(255,255,255,.14);
+  border-radius:28px; backdrop-filter:blur(12px);
+  box-shadow:0 25px 80px rgba(0,0,0,.45);
+}
+.small{font-size:14px;letter-spacing:4px;text-transform:uppercase;opacity:.7}
+h1{font-size:clamp(38px,8vw,76px);margin:18px 0 10px;font-weight:normal}
+#message{
+  max-width:720px; min-height:180px; font-size:clamp(20px,3vw,30px);
+  line-height:1.65; white-space:pre-line; opacity:0;
+  transform:translateY(20px); transition:opacity 1s,transform 1s;
+}
+#message.show{opacity:1;transform:translateY(0)}
+button{
+  margin-top:25px;padding:14px 30px;border:0;border-radius:999px;
+  color:white;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.25);
+  font-size:16px;cursor:pointer;transition:.3s
+}
+button:hover{transform:scale(1.06);background:rgba(255,255,255,.22)}
+.heart{
+ position:fixed;bottom:-30px;font-size:20px;opacity:.7;animation:float 7s linear forwards;
+ pointer-events:none;z-index:1
+}
+@keyframes float{to{transform:translateY(-115vh) rotate(360deg);opacity:0}}
+.fade{animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{50%{text-shadow:0 0 28px rgba(255,170,210,.8)}}
+.final{font-size:clamp(21px,3vw,31px)!important}
+.signature{margin-top:20px;font-size:22px;opacity:.9}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+
+<div id="lockScreen" class="card" style="position:fixed;z-index:10;inset:0;margin:auto;width:min(520px,92vw);min-height:420px;max-height:90vh;">
+  <div class="small">A secret surprise ❤️</div>
+  <h1 style="font-size:clamp(42px,10vw,70px);margin:22px 0 8px;">For Ranu</h1>
+  <p style="font-size:20px;line-height:1.6;max-width:400px;">
+    Kuch cheezein sabke liye nahi hoti…<br>
+    ye sirf tumhare liye hai. ✨
+  </p>
+  <input id="secretInput" type="password" placeholder="Enter the secret..." 
+    style="margin-top:15px;width:min(340px,80vw);padding:15px 20px;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.09);color:#fff;text-align:center;font-size:17px;outline:none;">
+  <button id="unlock">Unlock my surprise ❤️</button>
+  <div id="error" style="height:22px;margin-top:10px;color:#ffb3cf;font-size:14px;"></div>
+</div>
+
+<div class="card" id="mainCard" style="display:none;">
+  <div class="small" id="small">A little surprise for you</div>
+  <h1 id="title" class="fade">Ranu ❤️</h1>
+  <div id="message"></div>
+  <button id="next">Open my heart ✨</button>
+<div id="musicStatus" style="margin-top:14px;font-size:13px;opacity:.65">🎵 Romantic music starts with your first click</div>
+</div>
+
+<script>
+const pages = [
+`Aaj tumhare liye kuch kehna hai…
+Lekin is baar, sirf words mein nahi…
+Thoda sa dil se, thoda sa khwaabon ki tarah. ✨`,
+`Tum meri zindagi ka woh khoobsurat sapna ho,
+jise main chaah kar bhi todna nahi chahta…
+kyunki tumhare hone se hi
+mere khwaabon ko ek wajah milti hai. ❤️`,
+`Tum mere liye woh ehsaas ho
+jise lafzon mein bayaan karna mumkin hi nahi…
+Kuch rishte likhe nahi jaate,
+bas mehsoos kiye jaate hain…
+aur tum mere liye wahi ehsaas ho. 🫶`,
+`Tum ho… toh main hoon.
+Tumhari muskurahat mein meri khushi hai,
+tumhari awaaz mein mera sukoon hai,
+aur tumhare saath mein meri poori si duniya hai. ❤️`,
+`Shayad main har baar keh nahi pata,
+lekin mere dil ki har dhadkan
+bas ek hi naam jaanti hai…
+
+Ranu. ❤️`,
+`Mere sapno ke mahal mein,
+main har din ek eent sajata hoon,
+aaj bhi iss dil ko
+tera hi zikr batata hoon…
+
+Har din chaand poochhta hai mujhse,
+“Bata, koi hai kya mera humshakal?”
+
+Main muskura kar
+use teri tasveer dikhata hoon… ❤️🌙`
+];
+
+const SECRET = "RANU"; // Change this password if you want
+const lockScreen = document.getElementById("lockScreen");
+const mainCard = document.getElementById("mainCard");
+const secretInput = document.getElementById("secretInput");
+const unlock = document.getElementById("unlock");
+const errorBox = document.getElementById("error");
+
+function tryUnlock(){
+  if(secretInput.value.trim().toUpperCase() === SECRET){
+    lockScreen.style.opacity="0";
+    lockScreen.style.transform="scale(.96)";
+    lockScreen.style.transition="opacity .7s, transform .7s";
+    setTimeout(()=>{
+      lockScreen.style.display="none";
+      mainCard.style.display="flex";
+      document.getElementById("musicStatus").textContent="🎵 Romantic music starts with your first click";
+    },700);
+  } else {
+    errorBox.textContent="Hmm… secret galat hai ❤️";
+    secretInput.value="";
+    secretInput.focus();
+  }
+}
+unlock.addEventListener("click",tryUnlock);
+secretInput.addEventListener("keydown",e=>{if(e.key==="Enter") tryUnlock();});
+
+let i=-1;
+const msg=document.getElementById("message");
+const btn=document.getElementById("next");
+const title=document.getElementById("title");
+const small=document.getElementById("small");
+
+function reveal(){
+  i++;
+  if(i===0){
+    title.style.display="none";
+    small.textContent="Just for you ❤️";
+  }
+  msg.classList.remove("show");
+  setTimeout(()=>{
+    msg.textContent=pages[i];
+    msg.classList.add("show");
+  },250);
+
+  if(i===pages.length-1){
+    document.body.style.background="radial-gradient(circle at center,#6b163f 0%,#210b1b 48%,#08030a 100%)";
+    btn.textContent="❤️";
+    msg.classList.add("final");
+    setTimeout(()=>{
+      const s=document.createElement("div");
+      s.className="signature";
+      s.textContent="— Tumhara Vishal ❤️";
+      document.querySelector(".card").appendChild(s);
+      btn.style.display="none";
+    },1400);
+  } else {
+    btn.textContent=i===pages.length-2 ? "One last thing… ✨" : "Continue ❤️";
+  }
+}
+let audioCtx, musicTimer, musicOn=false, noteIndex=0;
+const melody=[
+  [261.63,0.55],[329.63,0.55],[392.00,0.7],[329.63,0.55],
+  [293.66,0.55],[349.23,0.55],[440.00,0.8],[349.23,0.55],
+  [261.63,0.55],[329.63,0.55],[392.00,0.7],[493.88,0.8],
+  [440.00,0.55],[392.00,0.55],[329.63,0.9]
+];
+function playNote(freq,dur){
+  if(!audioCtx) return;
+  const now=audioCtx.currentTime;
+  const osc=audioCtx.createOscillator();
+  const gain=audioCtx.createGain();
+  osc.type="sine"; osc.frequency.value=freq;
+  gain.gain.setValueAtTime(0.0001,now);
+  gain.gain.exponentialRampToValueAtTime(0.045,now+0.08);
+  gain.gain.exponentialRampToValueAtTime(0.0001,now+dur);
+  osc.connect(gain).connect(audioCtx.destination);
+  osc.start(now); osc.stop(now+dur+0.05);
+}
+function startRomanticMusic(){
+  if(musicOn) return;
+  audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+  musicOn=true;
+  document.getElementById("musicStatus").textContent="🎵 Romantic music playing";
+  const tick=()=>{
+    const [f,d]=melody[noteIndex++%melody.length];
+    playNote(f,d);
+  };
+  tick();
+  musicTimer=setInterval(tick,650);
+}
+btn.addEventListener("click",()=>{startRomanticMusic(); reveal();});
+
+function heart(){
+ const h=document.createElement("div");
+ h.className="heart";
+ h.textContent=["❤️","💗","💕","✨","🌸"][Math.floor(Math.random()*5)];
+ h.style.left=Math.random()*100+"vw";
+ h.style.fontSize=(14+Math.random()*20)+"px";
+ h.style.animationDuration=(5+Math.random()*5)+"s";
+ document.body.appendChild(h);
+ setTimeout(()=>h.remove(),10000);
+}
+setInterval(heart,650);
+</script>
+</body>
+</html>
